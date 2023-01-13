@@ -64,12 +64,8 @@ class MultiselectAdapter(
 
     fun deleteSelectedItem() : ArrayList<Int> {
         if(itemSelectedList.isNotEmpty()) {
-            dataset.removeAll { item -> item.selected }
             isEnable = false
-
-            //itemSelectedList.clear()
         }
-        notifyDataSetChanged()
         return itemSelectedList
     }
 }

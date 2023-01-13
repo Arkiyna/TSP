@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+val dataset = ArrayList<DataSet>()
 
 class LocationsViewActivity : AppCompatActivity() {
     private var mainMenu: Menu? = null
@@ -47,14 +48,9 @@ class LocationsViewActivity : AppCompatActivity() {
             "Ulica Prekmurske čete 14, Črenšovci", "Cesta na Stadion 1, Gornja Radgona", "Panonska cesta 5, Radenci")
 
 
-
-        val dataset = ArrayList<DataSet>()
-
         for(i in 0..addresses.size - 1) {
             dataset.add(DataSet(i, addresses[i], false))
         }
-
-
 
         mAdapter = MultiselectAdapter(dataset) { show -> showDeleteMenu(show) }
         val rv: RecyclerView = findViewById(R.id.recyclerView)
@@ -82,18 +78,34 @@ class LocationsViewActivity : AppCompatActivity() {
     }
 
     private fun delete() {
-        val alertDialog = AlertDialog.Builder(this)
-        alertDialog.setTitle("Zagon algoritma")
-        alertDialog.setMessage("Ali želite zagnati algoritem nad izbranimi mesti?")
-        alertDialog.setPositiveButton("Da") {_, _ ->
-            val test : ArrayList<Int> = mAdapter.deleteSelectedItem()
-            showDeleteMenu(false)
-            val intent = Intent(this, MapsActivity::class.java);
-            intent.putExtra("cities", test)
-
-            startActivity(intent)
+        var counter = 0
+        for(i in 0..dataset.size - 1) {
+            if (dataset[i].selected == true)
+                counter ++
         }
-        alertDialog.setNegativeButton("Ne") {_, _ -> }
-        alertDialog.show()
+
+        if (counter > 2) {
+            val alertDialog = AlertDialog.Builder(this)
+            alertDialog.setTitle("Zagon algoritma")
+            alertDialog.setMessage("Ali želite zagnati algoritem nad izbranimi mesti?")
+            alertDialog.setPositiveButton("Da") {_, _ ->
+                val test : ArrayList<Int> = mAdapter.deleteSelectedItem()
+                //showDeleteMenu(false)
+                val intent = Intent(this, MapsActivity::class.java);
+                intent.putExtra("cities", test)
+
+                startActivity(intent)
+            }
+            alertDialog.setNegativeButton("Ne") {_, _ -> }
+            alertDialog.show()
+        }
+        else {
+            val alertDialog = AlertDialog.Builder(this)
+            alertDialog.setTitle("Napaka!")
+            alertDialog.setMessage("Izbrali ste samo dve mesti!")
+            alertDialog.setPositiveButton("OK") {_, _ ->
+            }
+            alertDialog.show()
+        }
     }
 }

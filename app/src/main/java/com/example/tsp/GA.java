@@ -23,14 +23,15 @@ public class GA {
         this.pm = pm;
     }
 
-    public TSP.Tour execute(TSP problem) {
+    public TSP.Tour execute(TSP problem, ArrayList<Integer> indexes) {
         population = new ArrayList<>();
         offspring = new ArrayList<>();
+
         TSP.Tour best = null;
 
         for (int i = 0; i < popSize; i++) {
 
-            TSP.Tour newTour = problem.generateTour();
+            TSP.Tour newTour = problem.generateTour(indexes);
             problem.evaluate(newTour);
             population.add(newTour);
             if(i==0){

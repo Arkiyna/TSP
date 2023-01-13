@@ -77,16 +77,21 @@ public class TSP {
 
     }
 
-
     public void evaluate(Tour tour) {
         double distance = 0;
         distance += calculateDistance(start, tour.getPath()[0]);
-        for (int index = 0; index < numberOfCities; index++) {
-            if (index + 1 < numberOfCities)
+        System.out.println("DISTNACE: " + distance);
+        for (int index = 0; index < numberOfCities - 1; index++) {
+            if (index + 1 < numberOfCities) {
                 distance += calculateDistance(tour.getPath()[index], tour.getPath()[index + 1]);
-            else
+                System.out.println("DISTNACE: " + distance);
+            }
+            else {
                 distance += calculateDistance(tour.getPath()[index], start);
+                System.out.println("DISTNACE: " + distance);
+            }
         }
+        System.out.println("---------------------");
         tour.setDistance(distance);
         numberOfEvaluations++;
     }
@@ -106,33 +111,28 @@ public class TSP {
         }
     }
 
-    public Tour generateTour() {
+    public Tour generateTour(ArrayList<Integer> indexes) {
         List<Integer> nums = new ArrayList<>();
-        for(int i=0;i<numberOfCities;i++){
-            nums.add(i);
-        }
-        numberOfCities
-        for(int i=1;i<numberOfCities;i++){
-            int rand_int1 = RandomUtils.nextInt(1, numberOfCities); // 6
-            //nums.set(rand_int1,i); // 6 -> i
-            //nums.set(i,rand_int1); // i -> 6
-            Collections.swap(nums,rand_int1,i);
 
+
+        numberOfCities = indexes.toArray().length;
+        for(int i=0;i<numberOfCities;i++){
+            nums.add(indexes.get(i));
+        }
+
+
+        for(int i=1;i<numberOfCities;i++){
+            int rand_int1 = RandomUtils.nextInt(1, numberOfCities);
+            Collections.swap(nums,rand_int1,i);
         }
 
         Tour newTour = new Tour(numberOfCities);
         City[] tempPath = new City[numberOfCities];
         for(int i=0;i<nums.size();i++){
             tempPath[i] = cities.get(nums.get(i));
-            //System.out.println("Value na: "+i+" je: "+tempPath[i].index);
         }
 
         newTour.setPath(tempPath);
-        /*
-        for(int j=0;j<newTour.dimension;j++){
-            System.out.println("path v generate tour: "+newTour.path[j].index);
-        }
-        */
         return newTour;
     }
 
@@ -185,36 +185,29 @@ public class TSP {
                     while (line != null) {
                         lines.add(line);
                         line = br.readLine();
-                        //System.out.print("halo?1");
                         if (Objects.equals(line, "EDGE_WEIGHT_SECTION")) {
                             int currentLine = 0;
 
                             while (line != null) {
-
                                 lines.add(line);
                                 line = br.readLine();
 
                                 if (!Objects.equals(line.split(" ")[0], "EOF")) {
-                                    //System.out.println(line);
-                                    //System.out.print("halo?");
+
                                     String[] weightsString = (line.split(" "));
-                                    //System.out.println(Arrays.toString(weightsString));
                                     int currentIndex = 0;
                                     for(int i=0;i<weightsString.length;i++) {
                                         if(currentLine >= numberOfCities){
                                             currentLine++;
                                             break;
                                         }
-                                        if(weightsString[i] != "" && currentLine < numberOfCities) {
-                                            //System.out.println("Test: " + weightsString[i]+" number of lines: " +currentLine);
-
+                                        if(weightsString[i] != "") {
                                             weights[currentLine][currentIndex] = Double.parseDouble(weightsString[i]);
                                             currentIndex++;
                                         }
 
 
                                     }
-                                    //line = br.readLine();
                                     currentLine++;
                                 } else {
                                     line = br.readLine();
@@ -229,18 +222,6 @@ public class TSP {
         } catch (Exception e) {
             e.printStackTrace();
         }
-       /* for(int i=0;i<cities.size();i++){
-            System.out.println(cities.get(i).index);
-            System.out.print(cities.get(i).x);
-            System.out.print(cities.get(i).y);
-        }*/
-        //System.out.print(numberOfCities);
-        /*for(int i=0;i<numberOfCities;i++){
-            for(int j=0;j<numberOfCities;j++){
-                System.out.print(weights[i][j]+" ");
-            }
-            System.out.println();
-        }*/
         start = cities.get(0);
         //TODO parse data
     }

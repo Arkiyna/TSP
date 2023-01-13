@@ -2,22 +2,21 @@ package com.example.tsp
 
 import android.graphics.Color
 import android.os.AsyncTask
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-
+import androidx.appcompat.app.AppCompatActivity
+import com.example.tsp.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.example.tsp.databinding.ActivityMapsBinding
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.gson.Gson
-
 import okhttp3.OkHttpClient
 import okhttp3.Request
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -46,23 +45,57 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
+        val test : ArrayList<Int> = intent.getIntegerArrayListExtra("cities") as ArrayList<Int>
+        Log.d("myTag", test.toString());
+
+        val eilTsp = TSP("assets/distance.txt",  100000);
+        //double test = eilTsp.calculateDistance(eilTsp.cities.get(0),eilTsp.cities.get(1));
+        //double test = eilTsp.calculateDistance(eilTsp.cities.get(0),eilTsp.cities.get(1));
+
+        //System.out.println(test);
+        //System.out.println(test);
+        val ga = GA(100, 0.8, 0.1)
+
+        val bestPath = ga.execute(eilTsp)
         mMap = googleMap
+        for (arr in eilTsp.weights) {
+            for (s in arr) {
+                println(s)
+            }
+        }
 
+        println(bestPath.distance)
         // Add a marker in Sydney and move the camera
+        /*for (i in 0 .. 95) {
+            println(i)
+            if(i!=95){
+                val sydney1 = LatLng(bestPath.getPath().get(i).x, bestPath.getPath().get(i).y)
+                val sydney2 = LatLng(bestPath.getPath().get(i+1).x, bestPath.getPath().get(i+1).y)
+                mMap.addMarker(MarkerOptions().position(sydney1).title("Marker in city1"))
+                mMap.addMarker(MarkerOptions().position(sydney2).title("Marker in city2"))
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney1))
 
-        val sydney = LatLng( 46.0507279, 14.5150894)
-        val sydney1 = LatLng(46.056917, 14.506565)
-        val sydney2 = LatLng(46.0563371, 14.5346821)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.addMarker(MarkerOptions().position(sydney1).title("Marker in Sydney1"))
-        mMap.addMarker(MarkerOptions().position(sydney2).title("Marker in Sydney1"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+                var URL = getDirectionURL(sydney1,sydney2)
+                GetDirection(URL).execute()
+            }
+        }*/
 
-        var URL = getDirectionURL(sydney,sydney1)
-        GetDirection(URL).execute()
 
-        URL = getDirectionURL(sydney1,sydney2)
-        GetDirection(URL).execute()
+
+
+        //val sydney = LatLng( 46.0507279, 14.5150894)
+        //val sydney1 = LatLng(46.056917, 14.506565)
+       // val sydney2 = LatLng(46.0563371, 14.5346821)
+        //mMap.addMarker(MarkerOptions().position(sydney).title(test.get(0).toString()))
+        //mMap.addMarker(MarkerOptions().position(sydney1).title("Marker in Sydney1"))
+        //mMap.addMarker(MarkerOptions().position(sydney2).title("Marker in Sydney1"))
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+
+        //var URL = getDirectionURL(sydney,sydney1)
+        //GetDirection(URL).execute()
+
+        //URL = getDirectionURL(sydney1,sydney2)
+        //GetDirection(URL).execute()
     }
 
     fun getDirectionURL(origin: LatLng, dest: LatLng): String {

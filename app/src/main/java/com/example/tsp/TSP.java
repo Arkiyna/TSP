@@ -80,18 +80,14 @@ public class TSP {
     public void evaluate(Tour tour) {
         double distance = 0;
         distance += calculateDistance(start, tour.getPath()[0]);
-        System.out.println("DISTNACE: " + distance);
         for (int index = 0; index < numberOfCities - 1; index++) {
             if (index + 1 < numberOfCities) {
                 distance += calculateDistance(tour.getPath()[index], tour.getPath()[index + 1]);
-                System.out.println("DISTNACE: " + distance);
             }
             else {
                 distance += calculateDistance(tour.getPath()[index], start);
-                System.out.println("DISTNACE: " + distance);
             }
         }
-        System.out.println("---------------------");
         tour.setDistance(distance);
         numberOfEvaluations++;
     }
@@ -138,7 +134,6 @@ public class TSP {
 
     private void loadData(String path) {
         //TODO set starting city, which is always at index 0
-        System.out.println(path);
         InputStream inputStream = TSP.class.getClassLoader().getResourceAsStream(path);
         if (inputStream == null) {
             System.err.println("File " + path + " not found!");
@@ -155,7 +150,6 @@ public class TSP {
                 if (line.contains("DIMENSION")) {
                     numberOfCities = Integer.parseInt(line.split(": ")[1]);
                     weights = new double[numberOfCities][numberOfCities];
-                    System.out.println(numberOfCities);
                 }
                 if (Objects.equals(line, "EDGE_WEIGHT_TYPE : EUC_2D")) {
                     lines.add(line);

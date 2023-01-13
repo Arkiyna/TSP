@@ -1,5 +1,6 @@
 package com.example.tsp
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
@@ -47,26 +48,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         val test : ArrayList<Int> = intent.getIntegerArrayListExtra("cities") as ArrayList<Int>
 
-
-
-
-
-        val eilTsp = TSP("assets/distance.txt",  100000);
+        val eilTsp = TSP(intent.getStringExtra("path") as String,  10000);
         val ga = GA(100, 0.8, 0.1)
 
         val bestPath = ga.execute(eilTsp, test)
         mMap = googleMap
-        for (arr in eilTsp.weights) {
-            for (s in arr) {
-                println(s)
-            }
-        }
-
-        println(bestPath.distance)
-        for(i in 0..bestPath.dimension - 1) {
-            print(bestPath.getPath()[i].index)
-        }
-        println()
 
         val koordinate = arrayOf(
             "46.0507279 14.5150894",
@@ -301,7 +287,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             val request = Request.Builder().url(url).build()
             val response = client.newCall(request).execute()
             val data = response.body()!!.string()
-            Log.d("GoogleMap" , " data : $data")
             val result =  ArrayList<List<LatLng>>()
             try{
                 val respObj = Gson().fromJson(data,GoogleMapDTO::class.java)
@@ -365,5 +350,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         return poly
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        startActivity(Intent(this, LocationsViewActivity::class.java))
+        this.finish()
     }
 }

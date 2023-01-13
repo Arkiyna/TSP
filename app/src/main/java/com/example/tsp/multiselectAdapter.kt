@@ -63,9 +63,13 @@ class MultiselectAdapter(
     }
 
     fun deleteSelectedItem() : ArrayList<Int> {
+        val temp = itemSelectedList.clone()
+
+
         if(itemSelectedList.isNotEmpty()) {
-            isEnable = false
+            //isEnable = false
+            itemSelectedList.clear()
         }
-        return itemSelectedList
+        return temp as ArrayList<Int>
     }
 }

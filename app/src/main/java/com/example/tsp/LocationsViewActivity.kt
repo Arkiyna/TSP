@@ -77,6 +77,7 @@ class LocationsViewActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
     private fun delete() {
         var counter = 0
         for(i in 0..dataset.size - 1) {
@@ -88,15 +89,25 @@ class LocationsViewActivity : AppCompatActivity() {
             val alertDialog = AlertDialog.Builder(this)
             alertDialog.setTitle("Zagon algoritma")
             alertDialog.setMessage("Ali želite zagnati algoritem nad izbranimi mesti?")
-            alertDialog.setPositiveButton("Da") {_, _ ->
+            alertDialog.setPositiveButton("Glede na razladjo") {_,_  ->
                 val test : ArrayList<Int> = mAdapter.deleteSelectedItem()
-                //showDeleteMenu(false)
+                showDeleteMenu(false)
                 val intent = Intent(this, MapsActivity::class.java);
                 intent.putExtra("cities", test)
-
+                intent.putExtra("path", "assets/distance.txt")
                 startActivity(intent)
+                this.finish()
             }
-            alertDialog.setNegativeButton("Ne") {_, _ -> }
+            alertDialog.setNegativeButton("Glede na čas") {_,_  ->
+                val test : ArrayList<Int> = mAdapter.deleteSelectedItem()
+                showDeleteMenu(false)
+                val intent = Intent(this, MapsActivity::class.java);
+                intent.putExtra("cities", test)
+                intent.putExtra("path", "assets/time.txt")
+                startActivity(intent)
+                this.finish()
+            }
+            alertDialog.setNeutralButton("Ne") {_,_  -> }
             alertDialog.show()
         }
         else {
